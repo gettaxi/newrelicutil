@@ -2,14 +2,15 @@ package newrelicutil
 
 import (
 	"context"
-	"github.com/newrelic/go-agent"
 	"net/http"
+
+	"github.com/newrelic/go-agent"
 )
 
-type nrkey int
+type key int
 
 const (
-	transaction nrkey = iota
+	transaction key = iota
 	segment
 	externalSegment
 )
@@ -28,15 +29,14 @@ func WithTransaction(ctx context.Context, txn newrelic.Transaction) context.Cont
 	return context.WithValue(ctx, transaction, txn)
 }
 
-// WrapHandlerCtx return the given http handler that is wrapped to New Relic Transaction.
+// WrapHandler return the given http handler that is wrapped to New Relic Transaction.
 // Current New Relic Transaction is placed in the context.
-func WrapHandlerCtx(app newrelic.Application, name string, handler http.Handler) http.Handler {
+func WrapHandler(app newrelic.Application, name string, handler http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		txn := app.StartTransaction(name, w, r)
 		defer txn.End()
 
-		ctx := r.Context()
-		ctx = WithTransaction(ctx, txn)
+		ctx := WithTransaction(r.Context(), txn)
 
 		handler.ServeHTTP(txn, r.WithContext(ctx))
 	})
