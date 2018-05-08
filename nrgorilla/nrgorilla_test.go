@@ -1,13 +1,14 @@
 package nrgorilla_test
 
 import (
-	"testing"
-	"github.com/gorilla/mux"
 	"net/http"
-	"github.com/gettaxi/newrelicutil/nrgorilla"
-	"github.com/newrelic/go-agent"
-	"github.com/gettaxi/newrelicutil"
 	"net/http/httptest"
+	"testing"
+
+	"github.com/gettaxi/newrelicutil"
+	"github.com/gettaxi/newrelicutil/nrgorilla"
+	"github.com/gorilla/mux"
+	"github.com/newrelic/go-agent"
 )
 
 func TestInstrumentRoutes(t *testing.T) {
@@ -40,20 +41,20 @@ func TestRouteName(t *testing.T) {
 
 	var tt = []struct {
 		route *mux.Route
-		exp string
+		exp   string
 	}{
 		{
 			route: nil,
-			exp: "",
-		},{
+			exp:   "",
+		}, {
 			route: r.Handle("/api/", h).Methods("GET").Name("FOO"),
-			exp: "FOO",
-		},{
+			exp:   "FOO",
+		}, {
 			route: r.Handle("/api/v1/users", h).Methods("GET"),
-			exp: "GET /api/v1/users",
-		},{
+			exp:   "GET /api/v1/users",
+		}, {
 			route: r.Methods("GET"),
-			exp: "",
+			exp:   "",
 		},
 	}
 	for _, tc := range tt {

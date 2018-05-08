@@ -3,9 +3,10 @@ package nrgorilla
 
 import (
 	"strings"
+
+	"github.com/gettaxi/newrelicutil"
 	"github.com/gorilla/mux"
 	"github.com/newrelic/go-agent"
-	"github.com/gettaxi/newrelicutil"
 )
 
 // InstrumentRoutes adds instrumentation to a router.
@@ -17,7 +18,7 @@ func InstrumentRoutes(r *mux.Router, app newrelic.Application) *mux.Router {
 
 		return nil
 	})
-	if nil != r.NotFoundHandler {
+	if r.NotFoundHandler != nil {
 		r.NotFoundHandler = newrelicutil.WrapHandler(app, "NotFoundHandler", r.NotFoundHandler)
 	}
 	return r
