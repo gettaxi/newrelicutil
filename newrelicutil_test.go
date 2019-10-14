@@ -33,6 +33,17 @@ func TestWrapHandler(t *testing.T) {
 	wh.ServeHTTP(httptest.NewRecorder(), req)
 }
 
+func TestWrapHandler_NilApp(t *testing.T) {
+	h := http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+		assert.Nil(t, newrelicutil.Transaction(r.Context()))
+	})
+	wh := newrelicutil.WrapHandler(nil, "foo", h)
+	req, _ := http.NewRequest("GET", "/", nil)
+	assert.NotPanics(t, func() {
+		wh.ServeHTTP(httptest.NewRecorder(), req)
+	})
+}
+
 func TestSegment(t *testing.T) {
 	want := &newrelic.Segment{}
 	have := newrelicutil.Segment(context.Background())

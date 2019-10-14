@@ -34,6 +34,9 @@ func WithTransaction(ctx context.Context, txn newrelic.Transaction) context.Cont
 // WrapHandler return the given http handler that is wrapped to New Relic Transaction.
 // Current New Relic Transaction is placed in the context.
 func WrapHandler(app newrelic.Application, name string, handler http.Handler) http.Handler {
+	if app == nil {
+		return handler
+	}
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		txn := app.StartTransaction(name, w, r)
 		defer txn.End()
