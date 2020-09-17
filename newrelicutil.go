@@ -11,24 +11,20 @@ import (
 type key int
 
 const (
-	transaction key = iota
-	segment
+	segment key = iota
 	externalSegment
 	datastoreSegment
 )
 
 // Transaction returns the New Relic Transaction object from context.
 func Transaction(ctx context.Context) newrelic.Transaction {
-	if txn, ok := ctx.Value(transaction).(newrelic.Transaction); ok {
-		return txn
-	}
-	return nil
+	return newrelic.FromContext(ctx)
 }
 
 // WithTransaction puts the New Relic Transaction object to the given context
 // and returns the new context.
 func WithTransaction(ctx context.Context, txn newrelic.Transaction) context.Context {
-	return context.WithValue(ctx, transaction, txn)
+	return newrelic.NewContext(ctx, txn)
 }
 
 // WrapHandler return the given http handler that is wrapped to New Relic Transaction.

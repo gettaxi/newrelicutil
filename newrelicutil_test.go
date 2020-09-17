@@ -6,10 +6,10 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/gettaxi/newrelicutil"
+	newrelic "github.com/newrelic/go-agent"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/gettaxi/newrelicutil"
-	"github.com/newrelic/go-agent"
 )
 
 func TestTransaction(t *testing.T) {
